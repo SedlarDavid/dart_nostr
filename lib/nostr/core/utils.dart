@@ -1,5 +1,9 @@
 import 'dart:developer' as dev;
 
+import 'package:dart_nostr/dart_nostr.dart';
+
+import 'package:dart_nostr/nostr/dart_nostr.dart';
+
 /// {@template nostr_client_utils}
 /// General utils to be used in a whole [Nostr] instance.
 /// {@endtemplate}
@@ -19,12 +23,17 @@ class NostrClientUtils {
 
   /// Logs a message, and an optional error.
   void log(String message, [Object? error]) {
+    print(message);
+    if (error != null) {
+      print(error);
+    }
+/* 
     if (_isLogsEnabled) {
       dev.log(
         message,
         name: "Nostr${error != null ? "Error" : ""}",
         error: error,
       );
-    }
+    } */
   }
 }
