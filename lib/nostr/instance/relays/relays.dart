@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dart_nostr/dart_nostr.dart';
 import 'package:dart_nostr/nostr/core/extensions.dart';
@@ -104,8 +105,10 @@ class NostrRelays implements NostrRelaysBase {
       WebSocketChannel? relayWebSocket,
     )? onRelayListening,
     void Function(
-            String relayUrl, Object? error, WebSocketChannel? relayWebSocket)?
-        onRelayConnectionError,
+      String relayUrl,
+      Object? error,
+      WebSocketChannel? relayWebSocket,
+    )? onRelayConnectionError,
     void Function(String relayUrl, WebSocketChannel? relayWebSocket)?
         onRelayConnectionDone,
     bool lazyListeningToRelays = false,
@@ -297,7 +300,7 @@ class NostrRelays implements NostrRelaysBase {
         final serialized = countEvent.serialized();
         relay.socket.sink.add(serialized);
         utils.log(
-          'count event with subscription id: ${countEvent.subscriptionId} is sent to relay with url: ${relayUrl}',
+          'count event with subscription id: ${countEvent.subscriptionId} is sent to relay with url: $relayUrl',
         );
       }
     });
@@ -323,7 +326,7 @@ class NostrRelays implements NostrRelaysBase {
   }) {
     final serialized = request.serialized(
       subscriptionId: useConsistentSubscriptionIdBasedOnRequestData
-          ? null
+          ? request.subscriptionId
           : Nostr.instance.utilsService.random64HexChars(),
     );
 
@@ -340,7 +343,7 @@ class NostrRelays implements NostrRelaysBase {
 
           relay.socket.sink.add(serialized);
           utils.log(
-            'request with subscription id: ${request.subscriptionId} is sent to relay with url: ${relayUrl}',
+            'request with subscription id: ${request.subscriptionId} is sent to relay with url: $relayUrl',
           );
         }
       });
@@ -513,8 +516,10 @@ class NostrRelays implements NostrRelaysBase {
     required bool ignoreConnectionException,
     required bool lazyListeningToRelays,
     void Function(
-            String relay, WebSocketChannel? relayWebSocket, NostrNotice notice)?
-        onNoticeMessageFromRelay,
+      String relay,
+      WebSocketChannel? relayWebSocket,
+      NostrNotice notice,
+    )? onNoticeMessageFromRelay,
   }) {
     final relayWebSocket = nostrRegistry.getRelayWebSocket(relayUrl: relay);
 
