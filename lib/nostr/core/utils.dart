@@ -23,17 +23,15 @@ class NostrClientUtils {
 
   /// Logs a message, and an optional error.
   void log(String message, [Object? error]) {
-    print(message);
-    if (error != null) {
-      print(error);
-    }
-/* 
     if (_isLogsEnabled) {
-      dev.log(
-        message,
+      print(
+        message, /* 
         name: "Nostr${error != null ? "Error" : ""}",
-        error: error,
+        error: error, */
       );
-    } */
+      if (error != null) {
+        print(error);
+      }
+    }
   }
 }
